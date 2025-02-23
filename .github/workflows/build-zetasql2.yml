@@ -1,0 +1,99 @@
+name: build-zetasql2
+
+on:
+  push:
+    branches:
+      - test/build-zetasql2
+  workflow_dispatch: {}
+
+# 念のため、デフォルトで弱いパーミッションを設定
+permissions:
+  contents: read
+
+# 同時実行数は 1 に制限（キャンセルはしない）
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build-zetasql2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: bazel-contrib/setup-bazel@0.14.0
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}
+          # Share repository cache between workflows.
+          repository-cache: true
+
+      - name: Set up Android SDK
+        uses: amyu/setup-android@v4
+        with:
+          sdk-version: 32
+
+      - name: Check disk spaces
+        run: df -ha
+
+      - name: Setup Bazel work directories
+        run: |
+          sudo chown runner /mnt
+          mkdir -p /mnt/bazel-cache /mnt/bazel-sandbox /mnt/bazel-disk-cache
+          {
+            echo "BAZEL_START_UP_ARGS<<EOF"
+            echo -n "${BAZEL_START_UP_ARGS:-} --output_base=/mnt/bazel-cache"
+          }
+          {
+            echo "BAZEL_ARGS<<EOF"
+            echo -n "${BAZEL_ARGS:-} --sandbox_base=/mnt/bazel-sandbox"
+            echo -n " --disk_cache=/mnt/bazel-disk-cache"
+            echo ""
+            echo "EOF"
+          } >> $GITHUB_ENV
+
+      - name: Add focal-security repository and install libncurses5
+        run: |
+          echo "Types: deb" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          echo "URIs: http://security.ubuntu.com/ubuntu" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          echo "Suites: focal-security" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          echo "Components: universe" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          sudo apt-get update
+          sudo apt-get install -y libncurses5
+
+      # - name: Install build-essential
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y build-essential
+
+      # - name: Install libc6-dev
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libc6-dev
+
+      # - name: Install gcc-multilib
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y gcc-multilib
+
+      - name: Build with Bazelisk
+        working-directory: vendor/zetasql
+        run: bazelisk ${BAZEL_START_UP_ARGS} build ${BAZEL_ARGS} -c opt --dynamic_mode=off ...
+
+      - name: Archive bazel-bin
+        working-directory: vendor/zetasql
+        run: |
+          mkdir -p /mnt/artifacts
+          tar -czf /mnt/artifacts/bazel-bin.tar.gz -C "$(bazelisk info output_base)" bazel-bin
+
+      - name: Upload bazel-bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-bin
+          path: /mnt/artifacts/bazel-bin.tar.gz

@@ -1,0 +1,4 @@
+/zetasql/bazel-bin
+/zetasql/bazel-out
+/zetasql/bazel-testlogs
+/zetasql/bazel-zetasql
