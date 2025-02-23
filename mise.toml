@@ -1,0 +1,3 @@
+[tools]
+bazelisk = "1.25.0"
+node = "20"

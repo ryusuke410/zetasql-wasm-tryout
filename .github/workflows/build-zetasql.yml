@@ -1,0 +1,274 @@
+name: build-zetasql
+
+on:
+  push:
+    branches:
+      - test/build-zetasql
+  workflow_dispatch: {}
+
+# 念のため、デフォルトで弱いパーミッションを設定
+permissions:
+  contents: read
+
+# 同時実行数は 1 に制限（キャンセルはしない）
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build-zetasql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+
+      - name: Check space before cleanup
+        run: |
+          echo "Free space:"
+          df -h
+          sudo chown runner /mnt
+
+      - name: Cleanup
+        run: |
+          docker images
+          sudo rm -rf "/home/work/*" || true
+          sudo rm -rf "/opt/*" || true
+          sudo rm -rf "/usr/share/dotnet" || true
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY" || true
+          sudo rm -rf "/usr/local/share/boost" || true
+          sudo rm -rf "/usr/share/swift" || true
+          sudo rm -rf "/usr/local/julia*" || true
+          sudo rm -rf "/usr/share/kotlinc" || true
+          sudo rm -rf "/usr/local/share/edge_driver" || true
+          sudo rm -rf "/usr/local/share/chromedriver-linux64" || true
+          sudo rm -rf "/usr/local/share/gecko_driver" || true
+          sudo rm -rf "/usr/share/miniconda" || true
+          sudo rm -rf "/usr/local/share/phantomjs*" || true
+          sudo rm -rf "/usr/share/sbt" || true
+          sudo rm -rf "/usr/local/sqlpackage" || true
+          sudo rm -rf "/usr/bin/yq" || true
+          sudo rm -rf "/usr/local/share/vcpkg" || true
+          sudo rm -rf "/usr/local/bin/terraform" || true
+          sudo rm -rf "/usr/local/bin/stack" || true
+          sudo rm -rf "/usr/local/bin/aliyun" || true
+          sudo rm -rf "/usr/local/bin/pulumi" || true
+          sudo rm -rf "/usr/local/bin/pulumi-language-dotnet" || true
+          sudo rm -rf "/usr/local/bin/azcopy" || true
+          sudo rm -rf "/usr/local/aws-cli" || true
+          sudo rm -rf "/usr/local/bin/bicep" || true
+          sudo rm -rf "/usr/local/bin/rebar3" || true
+          sudo rm -rf "/usr/local/bin/phpunit" || true
+          sudo rm -rf "/usr/local/bin/packer" || true
+          sudo rm -rf "/usr/local/bin/bicep" || true
+          sudo rm -rf "/usr/local/bin/docker-compose" || true
+          sudo rm -rf "/home/.dotnet/tools" || true
+          sudo rm -rf "/etc/skel/.dotnet/tools" || true
+          sudo rm -rf "/usr/local/bin/minikube" || true
+          sudo rm -rf "/usr/local/bin/kustomize" || true
+          sudo rm -rf "/usr/local/bin/kubectl" || true
+          sudo rm -rf "/usr/local/bin/kind" || true
+          sudo rm -rf "/usr/local/bin/helm" || true
+          sudo rm -rf "/home/linuxbrew" || true
+          sudo rm -rf "/usr/share/apache-maven-3.8.8" || true
+          sudo rm -rf "/usr/share/gradle-8.7" || true
+          sudo rm -rf "/usr/local/share/phantomjs-8.6" || true
+          sudo rm -rf "/usr/local/bin/azcopy_11.3.1" || true
+          sudo rm -rf "/usr/local/bin/bicep" || true
+          sudo rm -rf "/usr/local/bin/.ghcup" || true
+          sudo rm -rf "/usr/local/.ghcup" || true
+          sudo rm -rf "/home/.nvm" || true
+          sudo rm -rf "/usr/bin/composer" || true
+          sudo rm -rf "/usr/local/bin/phpunit" || true
+          sudo rm -rf "/usr/local/bin/pulumi-analyzer-policy" || true
+          sudo rm -rf "/usr/local/bin/pulumi-analyzer-policy-python" || true
+          sudo rm -rf "/usr/local/bin/pulumi-language-java" || true
+          sudo rm -rf "/usr/local/bin/pulumi-language-nodejs" || true
+          sudo rm -rf "/usr/local/bin/pulumi-language-go" || true
+          sudo rm -rf "/usr/local/bin/pulumi-language-python" || true
+          sudo rm -rf "/usr/local/bin/pulumi-language-python-exec" || true
+          sudo rm -rf "/usr/local/bin/pulumi-language-yaml" || true
+          sudo rm -rf "/usr/local/bin/pulumi-resource-pulumi-nodejs" || true
+          sudo rm -rf "/usr/local/bin/pulumi-resource-pulumi-python" || true
+          sudo rm -rf "/usr/local/bin/pulumi-watch" || true
+          sudo rm -rf "/usr/local/bin/oc" || true
+          sudo rm -rf "/usr/local/bin/ctest" || true
+          sudo rm -rf "/usr/local/bin/cmake-gui" || true
+          sudo rm -rf "/usr/local/bin/ccmake" || true
+          sudo rm -rf "/usr/local/bin/cpack" || true
+          sudo rm -rf "/usr/local/bin/oras" || true
+          sudo rm -rf "/usr/local/share/emacs" || true
+          sudo rm -rf "/usr/local/share/fonts" || true
+          sudo rm -rf "/usr/local/share/icons" || true
+          sudo rm -rf "/usr/local/share/man" || true
+          sudo rm -rf "/usr/local/share/chromium" || true
+          sudo rm -rf "/usr/local/share/powershell" || true
+          sudo rm -rf "/usr/local/share/doc" || true
+          sudo rm -rf "/home/perflog" || true
+          sudo rm -rf "/usr/libexec/docker/cli-plugins" || true
+          sudo rm -rf "/usr/bin/docker-credential-ecr-login" || true
+          sudo rm -rf "/usr/local/lib/lein" || true
+          sudo docker image prune --all --force
+          sudo npm uninstall bazel || true
+          sudo npm uninstall bazelisk || true
+          rustup self uninstall -y
+          sudo apt purge \
+            ansible \
+            aria2 \
+            azure-cli \
+            cabal* \
+            dotnet-sdk* \
+            ghc* \
+            google-chrome-stable \
+            kubectl \
+            mysql* \
+            php* \
+            powershell \
+            rpm \
+            ruby* \
+            subversion \
+            yarn \
+            firefox \
+            mono-complete \
+            nuget \
+            apache2 \
+            moby-engine \
+            moby-cli \
+            moby-buildx \
+            moby-compose \
+            microsoft-edge-stable \
+            mongodb* \
+            nginx \
+            postgresql* \
+            libpq-dev \
+            r-base \
+            sphinxsearch \
+            swig \
+            tcl \
+            temurin-* \
+            skopeo \
+            imagemagick-* \
+            mssql-tools* \
+            unixodbc-dev \
+            ubuntu-advantage-tools \
+            docker-* \
+            fonts-* \
+            javascript-common \
+            openjdk-11-jre-headless \
+            linux-cloud-tools* \
+            linux-azure-6.2-* \
+            hicolor-icon-theme \
+            gcc-9 \
+            gcc-10 \
+            gcc-11 \
+            cloud-initramfs* \
+            x11-* \
+            bind9-* \
+            cloud-* \
+            gir1.2-* \
+            golang-github-* \
+            libjs-* \
+            nano \
+            python3-* \
+            podman \
+            buildah \
+            skopeo \
+            temurin-* \
+            ant \
+            ant-optional \
+            libmysqlclient-dev \
+            libxft-dev \
+            libfreetype6-dev \
+            libfontconfig1-dev \
+            libpq-dev \
+            tcl* \
+            p7zip* \
+            gfortran-13 \
+            gcc-11-* \
+            google-cloud-cli \
+            heroku \
+            snmp \
+            liblz4-dev \
+            man-db \
+            packages-microsoft-prod \
+            perl \
+            *-dev \
+            linux-headers-* \
+            manpages \
+            -yq || true
+          sudo dpkg -r packages-microsoft-prod > /dev/null 2>&1 || true
+          sudo apt-get autoremove -y > /dev/null 2>&1 || true
+          sudo apt-get autoclean -y > /dev/null 2>&1 || true
+          apt list --installed
+          ls -al /usr/local/share
+
+      - name: Post process of cleanup
+        run: |
+          echo "Free space:"
+          df -h
+          cat /etc/fstab
+
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: bazel-contrib/setup-bazel@0.14.0
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}
+          # Share repository cache between workflows.
+          repository-cache: true
+
+      - name: Set up Android SDK
+        uses: amyu/setup-android@v4
+        with:
+          sdk-version: 32
+
+      - name: Add focal-security repository and install libncurses5
+        run: |
+          echo "Types: deb" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          echo "URIs: http://security.ubuntu.com/ubuntu" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          echo "Suites: focal-security" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          echo "Components: universe" | sudo tee -a /etc/apt/sources.list.d/focal-security.sources
+          sudo apt-get update
+          sudo apt-get install -y libncurses5
+
+      - name: Setup Bazel work directories
+        run: |
+          sudo chown runner /mnt
+          mkdir -p /mnt/bazel-output-base
+          {
+            echo "BAZEL_START_UP_ARGS<<EOF"
+
+            echo -n "${BAZEL_START_UP_ARGS:-} --output_base=/mnt/bazel-output-base"
+
+            echo ""
+            echo "EOF"
+          } >> $GITHUB_ENV
+
+      - name: Build with Bazelisk
+        working-directory: vendor/zetasql
+        run: bazelisk ${BAZEL_START_UP_ARGS} build -c opt --dynamic_mode=off ...
+
+      - name: Bazel info
+        working-directory: vendor/zetasql
+        run: bazelisk ${BAZEL_START_UP_ARGS} info
+
+      - name: Archive bazel-bin
+        working-directory: vendor/zetasql
+        run: |
+          mkdir -p /mnt/artifacts
+
+          # /mnt/bazel-output-base/execroot/com_google_zetasql/bazel-out/k8-fastbuild/bin
+          # /mnt/bazel-output-base/execroot/com_google_zetasql/bazel-out/k8-opt/bin/zetasql
+          # NOTE: bazel info について bazel-bin は間違っているので、直接指定が必要 k8-opt
+          echo tar -czf /mnt/artifacts/bazel-bin.tar.gz -C "$(bazelisk ${BAZEL_START_UP_ARGS} info output_path)/k8-opt/bin" zetasql
+          tar -czf /mnt/artifacts/bazel-bin.tar.gz -C "$(bazelisk ${BAZEL_START_UP_ARGS} info output_path)/k8-opt/bin" zetasql/tools
+          ls -lh /mnt/bazel-output-base/execroot/com_google_zetasql/bazel-out/k8-opt/bin/zetasql
+
+      - name: Upload bazel-bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-bin
+          path: /mnt/artifacts/bazel-bin.tar.gz

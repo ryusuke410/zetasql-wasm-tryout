@@ -1,0 +1,6 @@
+[submodule "vendor/bazel-emscripten"]
+	path = vendor/bazel-emscripten
+	url = git@github.com:s0l0ist/bazel-emscripten.git
+[submodule "vendor/zetasql"]
+	path = vendor/zetasql
+	url = https://github.com/google/zetasql.git

@@ -1,0 +1,5 @@
+/.gitignore
+/bazel-bin
+/bazel-out
+/bazel-testlogs
+/bazel-zetasql
