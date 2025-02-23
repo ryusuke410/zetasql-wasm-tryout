@@ -1,0 +1,56 @@
+name: build-zetasql
+
+on:
+  push:
+    branches:
+      - test/build-zetasql
+  workflow_dispatch: {}
+
+# 念のため、デフォルトで弱いパーミッションを設定
+permissions:
+  contents: read
+
+# 同時実行数は 1 に制限（キャンセルはしない）
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build-zetasql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: bazel-contrib/setup-bazel@0.14.0
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}
+          # Share repository cache between workflows.
+          repository-cache: true
+
+      - name: Set up Android SDK
+        uses: amyu/setup-android@v4
+        with:
+          sdk-version: 32
+
+      - name: Install libncurses5
+        run: sudo apt-get update && sudo apt-get install -y libncurses5
+
+      - name: Build with Bazelisk
+        working-directory: vendor/zetasql
+        run: bazelisk build -c opt --dynamic_mode=off ...
+
+      - name: Archive bazel-bin
+        working-directory: vendor/zetasql
+        run: tar -czf bazel-bin.tar.gz -C "$(bazelisk info output_base)" bazel-bin
+
+      - name: Upload bazel-bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-bin
+          path: vendor/zetasql/bazel-bin.tar.gz
