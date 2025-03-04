@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/strictest",
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ESNext",
+    "outDir": "./dist",
+    "strict": true,
+    "erasableSyntaxOnly": true,
+    "moduleResolution": "bundler"
+  },
+  "include": ["./index.ts"]
+}

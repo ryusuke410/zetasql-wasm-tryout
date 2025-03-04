@@ -1,0 +1,25 @@
+{
+  "name": "es-ext-lib",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd sh && ./build.sh"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "typescript": "^5.8.2"
+  }
+}
