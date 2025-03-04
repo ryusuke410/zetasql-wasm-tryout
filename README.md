@@ -79,12 +79,28 @@ docker run zetasql-mode-build --init -it --rm ls .
 git submodule update --init --recursive && (cd vendor/bazel-emscripten && npm install --frozen-lockfile && npm run build && npm run rollup && npm run demo)
 ```
 
+## Node.js の setup
+
+`.nvmrc` を参考に指定バージョンの Node.js を利用可能な状態にしてください。
+
+## emscripten と wasm の tryout
+
+以下のコマンドで動作確認ができます。
+
+```sh
+npm run emscripten-tryout:build-and-demo
+```
+
 ## ロードマップ
 
+- [x] zetasql 自体のビルドができることを確認する
+- [x] emscripten と wasm を使った C++ ライブラリの ECMA Script バインディングを試す
+- [ ] bazel での ECMA Script バインディングのビルドを試す
 - [ ] wasm を使った zetasql の ECMA bindings を作り、例として 1 つの API のみ bindings を実装する
 - [ ] C++ 実装で、parser と unparser を macos と ubuntu で使えるようにする
 - [ ] C++ 実装で、 BigQuery のクエリの静的な型チェッカーを macos と ubuntu で使えるようにする
 - [ ] wasm を使った zetasql の ECMA bindings を作り、以上のツールを TypeScript で再実装する（ツールの実装に必要な bindings しか実装しない。）
+- [ ] zetasql-npm や go-zetasql のインタフェースを理解する
 - [ ] Node.js bindings を全てのインタフェースに拡張する
 
 ## ポエム

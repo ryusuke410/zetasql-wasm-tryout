@@ -1,0 +1,12 @@
+{
+  "name": "emscripten-tryout",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build-and-run-demo": "pnpm --filter es-ext-lib run build && pnpm --filter demo-es-ext-lib run demo"
+  }
+}
