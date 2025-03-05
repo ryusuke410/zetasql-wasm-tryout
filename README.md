@@ -31,7 +31,7 @@ xcode-select --install
 以下のコマンドで全てのプロジェクトが問題なくビルドされるはずです。
 
 ```sh
-git submodule update --init --recursive && cp zetasql/.gitignore.txt vendor/zetasql/.gitignore && (cd vendor/zetasql && bazelisk build --copt='-mmacosx-version-min=10.13' -c opt --dynamic_mode=off ...)
+git submodule update --init --recursive && cp ./zetasql/.gitignore.txt .git/modules/vendor/zetasql/info/exclude && (cd vendor/zetasql && bazelisk build --copt='-mmacosx-version-min=10.13' -c opt --dynamic_mode=off ...)
 ```
 
 ビルドが完了すると、例えば `execute_query` のバイナリが使えるようになります。
@@ -89,6 +89,19 @@ git submodule update --init --recursive && (cd vendor/bazel-emscripten && npm in
 
 ```sh
 npm run emscripten-tryout:build-and-demo
+```
+
+## wip bazel + emscripten + wasm の tryout
+
+TODO: `vendor/zetasql/zetasql/public/BUILD` を確認して、 zetasql での Bazel の書き方に慣れる。
+
+## wip zetasql tools wasm_tryout
+
+こちらで開発した tools を以下に挿入してみています。
+（本当は外部に作れるので修正します。 TODO: `vendor/zetasql/zetasql/public/BUILD` を確認する。）
+
+```sh
+cp ./zetasql/.gitignore.txt .git/modules/vendor/zetasql/info/exclude && ln -sf './../../../../zetasql/wasm_tryout' ./vendor/zetasql/zetasql/tools/wasm_tryout
 ```
 
 ## ロードマップ

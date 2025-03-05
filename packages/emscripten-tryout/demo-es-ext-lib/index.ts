@@ -12,4 +12,5 @@ import getExtLib from "es-ext-lib";
   console.log(`Initial count: ${counter.getCount()}`);
   counter.increment();
   console.log(`After increment: ${counter.getCount()}`);
+  counter.delete();
 })();

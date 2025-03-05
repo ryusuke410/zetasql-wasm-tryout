@@ -1,0 +1,19 @@
+{
+  "name": "zetasql-wasm",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "demo": "RUN_DEMO=wasm node ./hello-world/javascript/examples/demo.js",
+    "build": "npm run build:wasm",
+    "build:wasm": "bash hello-world/javascript/scripts/build-wasm.sh && npm run build:copy",
+    "build:copy": "bash hello-world/javascript/scripts/build-copy.sh",
+    "clean": "bazelisk clean --expunge && rm -rf hello-world/javascript/bin/* && rm -rf hello-world/javascript/dist/*",
+    "prerollup": "rm -rf hello-world/javascript/bin/* && rm -rf hello-world/javascript/dist/* && npm run build:copy",
+    "rollup": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^2.58.0",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}
