@@ -3,3 +3,4 @@
 /bazel-out
 /bazel-testlogs
 /bazel-zetasql
+/zetasql/tools/wasm_tryout
