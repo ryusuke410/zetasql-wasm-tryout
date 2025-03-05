@@ -101,7 +101,7 @@ TODO: `vendor/zetasql/zetasql/public/BUILD` を確認して、 zetasql での Ba
 （本当は外部に作れるので修正します。 TODO: `vendor/zetasql/zetasql/public/BUILD` を確認する。）
 
 ```sh
-cp ./zetasql/.gitignore.txt .git/modules/vendor/zetasql/info/exclude && ln -sf './../../../../zetasql/wasm_tryout' ./vendor/zetasql/zetasql/tools/wasm_tryout
+git submodule update --init --recursive && cp ./zetasql/.gitignore.txt .git/modules/vendor/zetasql/info/exclude && ln -sf './../../../../zetasql/wasm_tryout' ./vendor/zetasql/zetasql/tools/wasm_tryout
 ```
 
 ## ロードマップ
