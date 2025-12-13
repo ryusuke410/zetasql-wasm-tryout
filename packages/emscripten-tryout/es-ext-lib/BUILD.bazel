@@ -1,0 +1,41 @@
+filegroup(
+    name = "binding_cc",
+    srcs = ["binding.cc"],
+)
+
+genrule(
+    name = "wasm_binding",
+    srcs = [
+        ":binding_cc",
+        "//packages/emscripten-tryout/ext_lib:cc_files",
+        "//packages/emscripten-tryout/ext_lib:headers",
+    ],
+    outs = [
+        "dist/index.d.ts",
+        "dist/index.js",
+        "dist/index.wasm",
+    ],
+    cmd = (
+        "set -euo pipefail; "
+        "tmpdir=$$(mktemp -d); "
+        "cp $(location :binding_cc) $(locations //packages/emscripten-tryout/ext_lib:cc_files) $(locations //packages/emscripten-tryout/ext_lib:headers) \"$$tmpdir\"/; "
+        "cd \"$$tmpdir\"; "
+        "emcc -lembind -o index.js binding.cc add.cc counter.cc "
+        "-I. "
+        "-s ENVIRONMENT=web,node "
+        "-s ALLOW_MEMORY_GROWTH=1 "
+        "-s EXPORT_ES6=1 "
+        "-s MODULARIZE=1 "
+        "-s NO_FILESYSTEM=1 "
+        "-s ASSERTIONS=0 "
+        "-flto "
+        "--closure 1 "
+        "-O3 "
+        "--emit-tsd index.d.ts; "
+        "mkdir -p $(@D); "
+        "mv index.js $(@D)/index.js; "
+        "mv index.wasm $(@D)/index.wasm; "
+        "mv index.d.ts $(@D)/index.d.ts"
+    ),
+    tools = ["@bazel_tools//tools/bash/runfiles"],
+)

@@ -79,6 +79,17 @@ docker run zetasql-mode-build --init -it --rm ls .
 git submodule update --init --recursive && (cd vendor/bazel-emscripten && npm install --frozen-lockfile && npm run build && npm run rollup && npm run demo)
 ```
 
+## bazel での ECMA Script バインディングのビルド
+
+`packages/emscripten-tryout` に Bazel のワークスペースを追加しました。
+以下のコマンドで、emscripten によるバインディング生成を Bazel 経由で実行できます。
+（`emcc` が PATH にあることを前提としています。）
+
+```sh
+bazel build //packages/emscripten-tryout/es-ext-lib:wasm_binding
+ls bazel-bin/packages/emscripten-tryout/es-ext-lib/dist
+```
+
 ## Node.js の setup
 
 `.nvmrc` を参考に指定バージョンの Node.js を利用可能な状態にしてください。
@@ -108,7 +119,7 @@ git submodule update --init --recursive && cp ./zetasql/.gitignore.txt .git/modu
 
 - [x] zetasql 自体のビルドができることを確認する
 - [x] emscripten と wasm を使った C++ ライブラリの ECMA Script バインディングを試す
-- [ ] bazel での ECMA Script バインディングのビルドを試す
+- [x] bazel での ECMA Script バインディングのビルドを試す
 - [ ] wasm を使った zetasql の ECMA bindings を作り、例として 1 つの API のみ bindings を実装する
 - [ ] C++ 実装で、parser と unparser を macos と ubuntu で使えるようにする
 - [ ] C++ 実装で、 BigQuery のクエリの静的な型チェッカーを macos と ubuntu で使えるようにする

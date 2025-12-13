@@ -1,0 +1,1 @@
+workspace(name = "zetasql_wasm_tryout")

@@ -1,0 +1,17 @@
+filegroup(
+    name = "cc_files",
+    srcs = [
+        "add.cc",
+        "counter.cc",
+    ],
+    visibility = ["//packages/emscripten-tryout/es-ext-lib:__pkg__"],
+)
+
+filegroup(
+    name = "headers",
+    srcs = [
+        "add.h",
+        "counter.h",
+    ],
+    visibility = ["//packages/emscripten-tryout/es-ext-lib:__pkg__"],
+)
