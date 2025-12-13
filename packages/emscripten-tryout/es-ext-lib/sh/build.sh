@@ -9,6 +9,7 @@ cd "$repo_root"
 
 bazelisk build //packages/emscripten-tryout/es-ext-lib:wasm_binding
 
-dist_from_bazel="$repo_root/bazel-bin/packages/emscripten-tryout/es-ext-lib/dist"
+bazel_dist="$repo_root/bazel-bin/packages/emscripten-tryout/es-ext-lib/wasm_binding"
 mkdir -p "$package_dir/dist"
-cp -f "$dist_from_bazel"/index.{js,wasm,d.ts} "$package_dir/dist/"
+cp -f "$bazel_dist"/binding.{js,wasm} "$package_dir/dist/"
+cp -f "$package_dir/types/index.d.ts" "$package_dir/dist/binding.d.ts"

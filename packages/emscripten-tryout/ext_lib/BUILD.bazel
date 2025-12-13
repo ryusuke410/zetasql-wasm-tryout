@@ -1,15 +1,12 @@
-filegroup(
-    name = "cc_files",
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "ext_lib",
     srcs = [
         "add.cc",
         "counter.cc",
     ],
-    visibility = ["//packages/emscripten-tryout/es-ext-lib:__pkg__"],
-)
-
-filegroup(
-    name = "headers",
-    srcs = [
+    hdrs = [
         "add.h",
         "counter.h",
     ],

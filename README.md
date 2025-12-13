@@ -81,12 +81,12 @@ git submodule update --init --recursive && (cd vendor/bazel-emscripten && npm in
 
 ## bazel での ECMA Script バインディングのビルド
 
-`packages/emscripten-tryout` では Bzlmod を使って、Bazel 経由で emscripten のバインディング生成を実行できます。
+`packages/emscripten-tryout` では <https://github.com/s0l0ist/bazel-emscripten/tree/master> の構成にならい、Bzlmod で emsdk を取り込みつつ `wasm_cc_binary` で emscripten のバインディング生成を実行できます。
 emsdk のセットアップが必要なので、バージョンは `mise.toml` を参考にしてください。
 
 ```sh
 bazel build //packages/emscripten-tryout/es-ext-lib:wasm_binding
-ls bazel-bin/packages/emscripten-tryout/es-ext-lib/dist
+ls bazel-bin/packages/emscripten-tryout/es-ext-lib/wasm_binding
 ```
 
 ## Node.js の setup

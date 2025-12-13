@@ -1,57 +1,27 @@
-filegroup(
-    name = "binding_cc",
+load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "binding", 
     srcs = ["binding.cc"],
+    deps = ["//packages/emscripten-tryout/ext_lib:ext_lib"],
+    linkopts = [
+        "-lembind",
+        "--bind",
+        "-s ENVIRONMENT=web,node",
+        "-s ALLOW_MEMORY_GROWTH=1",
+        "-s EXPORT_ES6=1",
+        "-s MODULARIZE=1",
+        "-s NO_FILESYSTEM=1",
+        "-s ASSERTIONS=0",
+        "--closure 1",
+        "-O3",
+        "--emit-tsd",
+        "index.d.ts",
+    ],
 )
 
-genrule(
+wasm_cc_binary(
     name = "wasm_binding",
-    srcs = [
-        ":binding_cc",
-        "//packages/emscripten-tryout/ext_lib:cc_files",
-        "//packages/emscripten-tryout/ext_lib:headers",
-    ],
-    outs = [
-        "dist/index.d.ts",
-        "dist/index.js",
-        "dist/index.wasm",
-    ],
-    cmd = " && ".join([
-        "set -euo pipefail",
-        "workspace_dir=$$PWD",
-        "tmpdir=$$(mktemp -d)",
-        "mkdir -p \"$$tmpdir\"/es-ext-lib \"$$tmpdir\"/ext_lib",
-        "cp $(location :binding_cc) \"$$tmpdir\"/es-ext-lib/",
-        "cp $(locations //packages/emscripten-tryout/ext_lib:cc_files) \"$$tmpdir\"/ext_lib/",
-        "cp $(locations //packages/emscripten-tryout/ext_lib:headers) \"$$tmpdir\"/ext_lib/",
-        "cd \"$$tmpdir\"/es-ext-lib",
-        "out_dir=\"$$workspace_dir/$(@D)/dist\"",
-        "mkdir -p \"$${out_dir}\"",
-        " ".join([
-            "emcc",
-            "-lembind",
-            "binding.cc",
-            "../ext_lib/add.cc",
-            "../ext_lib/counter.cc",
-            "-I..",
-            "-I../ext_lib",
-            "-s ENVIRONMENT=web,node",
-            "-s ALLOW_MEMORY_GROWTH=1",
-            "-s EXPORT_ES6=1",
-            "-s MODULARIZE=1",
-            "-s NO_FILESYSTEM=1",
-            "-s ASSERTIONS=0",
-            "-flto",
-            "--closure",
-            "1",
-            "-O3",
-            "--emit-tsd",
-            "index.d.ts",
-            "-o",
-            "index.js",
-        ]),
-        "mv index.js \"$$out_dir\"/index.js",
-        "mv index.wasm \"$$out_dir\"/index.wasm",
-        "mv index.d.ts \"$$out_dir\"/index.d.ts",
-    ]),
-    tools = ["@bazel_tools//tools/bash/runfiles"],
+    cc_target = ":binding",
 )

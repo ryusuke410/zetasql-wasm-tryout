@@ -6,12 +6,12 @@
     "build": "cd sh && ./build.sh"
   },
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/binding.js",
+  "types": "dist/binding.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/binding.js",
+      "types": "./dist/binding.d.ts"
     },
     "./package.json": "./package.json"
   },
