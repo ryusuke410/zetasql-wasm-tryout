@@ -17,7 +17,7 @@ cc_binary(
         "--closure 1",
         "-O3",
         "--emit-tsd",
-        "index.d.ts",
+        "binding.d.ts",
     ],
 )
 
