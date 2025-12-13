@@ -1,0 +1,38 @@
+diff --git a/emscripten_toolchain/link_wrapper.py b/emscripten_toolchain/link_wrapper.py
+--- a/emscripten_toolchain/link_wrapper.py
++++ b/emscripten_toolchain/link_wrapper.py
+@@ -88,6 +88,7 @@
+     '.js.symbols',
+     '.wasm.debug.wasm',
+     '.html',
++    '.d.ts',
+ ]
+ 
+ for ext in extensions:
+diff --git a/emscripten_toolchain/wasm_cc_binary.bzl b/emscripten_toolchain/wasm_cc_binary.bzl
+--- a/emscripten_toolchain/wasm_cc_binary.bzl
++++ b/emscripten_toolchain/wasm_cc_binary.bzl
+@@ -67,6 +67,7 @@
+     ".js.symbols",
+     ".wasm.debug.wasm",
+     ".html",
++    ".d.ts",
+ ]
+ 
+ _WASM_BINARY_COMMON_ATTRS = {
+@@ -144,6 +145,7 @@
+         ctx.outputs.data,
+         ctx.outputs.symbols,
+         ctx.outputs.dwarf,
++        ctx.outputs.types,
+         ctx.outputs.html,
+     ]
+ 
+@@ -190,6 +192,7 @@
+         "map": "{}/{}.wasm.map".format(name, basename),
+         "data": "{}/{}.data".format(name, basename),
+         "symbols": "{}/{}.js.symbols".format(name, basename),
++        "types": "{}/{}.d.ts".format(name, basename),
+         "dwarf": "{}/{}.wasm.debug.wasm".format(name, basename),
+         "html": "{}/{}.html".format(name, basename),
+     }

@@ -85,15 +85,13 @@ git submodule update --init --recursive && (cd vendor/bazel-emscripten && npm in
 
 ## emscripten と wasm の tryout
 
+`packages/emscripten-tryout` では <https://github.com/s0l0ist/bazel-emscripten/tree/master> の構成にならい、Bzlmod で emsdk を取り込みつつ `wasm_cc_binary` で emscripten のバインディング生成を実行しています。emsdk のセットアップが必要なので、バージョンは `mise.toml` を参考にしてください。
+
 以下のコマンドで動作確認ができます。
 
 ```sh
 npm run emscripten-tryout:build-and-demo
 ```
-
-## wip bazel + emscripten + wasm の tryout
-
-TODO: `vendor/zetasql/zetasql/public/BUILD` を確認して、 zetasql での Bazel の書き方に慣れる。
 
 ## wip zetasql tools wasm_tryout
 
@@ -107,8 +105,7 @@ git submodule update --init --recursive && cp ./zetasql/.gitignore.txt .git/modu
 ## ロードマップ
 
 - [x] zetasql 自体のビルドができることを確認する
-- [x] emscripten と wasm を使った C++ ライブラリの ECMA Script バインディングを試す
-- [ ] bazel での ECMA Script バインディングのビルドを試す
+- [x] emscripten と wasm を使った C++ ライブラリの ECMA Script バインディングを Bazel で試す
 - [ ] wasm を使った zetasql の ECMA bindings を作り、例として 1 つの API のみ bindings を実装する
 - [ ] C++ 実装で、parser と unparser を macos と ubuntu で使えるようにする
 - [ ] C++ 実装で、 BigQuery のクエリの静的な型チェッカーを macos と ubuntu で使えるようにする

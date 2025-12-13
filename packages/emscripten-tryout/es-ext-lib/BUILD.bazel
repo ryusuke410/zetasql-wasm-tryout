@@ -1,0 +1,27 @@
+load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "binding", 
+    srcs = ["binding.cc"],
+    deps = ["//packages/emscripten-tryout/ext_lib:ext_lib"],
+    linkopts = [
+        "-lembind",
+        "--bind",
+        "-s ENVIRONMENT=web,node",
+        "-s ALLOW_MEMORY_GROWTH=1",
+        "-s EXPORT_ES6=1",
+        "-s MODULARIZE=1",
+        "-s NO_FILESYSTEM=1",
+        "-s ASSERTIONS=0",
+        "--closure 1",
+        "-O3",
+        "--emit-tsd",
+        "binding.d.ts",
+    ],
+)
+
+wasm_cc_binary(
+    name = "wasm_binding",
+    cc_target = ":binding",
+)

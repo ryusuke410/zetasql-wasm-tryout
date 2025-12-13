@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
-    "setup": "time (echo 👉 pnpm install 等の setup を開始します。 && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && corepack prepare --activate && pnpm install --frozen-lockfile)",
-    "format": "time (echo 👉 pnpm install 等の setup を開始します。 && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && corepack prepare --activate && pnpm install --frozen-lockfile && echo '👉 ファイルの整形を開始します。' && pnpm exec -- prettier --write .)",
-    "emscripten-tryout:build-and-demo": "time (echo 👉 pnpm install 等の setup を開始します。 && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && corepack prepare --activate && pnpm install --frozen-lockfile && pnpm --filter emscripten-tryout run build-and-run-demo)"
+    "setup": "bash -lc \"time (echo 👉 pnpm install 等の setup を開始します。 && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && corepack prepare --activate && pnpm install --frozen-lockfile)\"",
+    "format": "bash -lc \"time (echo 👉 pnpm install 等の setup を開始します。 && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && corepack prepare --activate && pnpm install --frozen-lockfile && echo '👉 ファイルの整形を開始します。' && pnpm exec -- prettier --write .)\"",
+    "emscripten-tryout:build-and-demo": "bash -lc \"time (echo 👉 pnpm install 等の setup を開始します。 && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && corepack prepare --activate && pnpm install --frozen-lockfile && pnpm --filter emscripten-tryout run build-and-run-demo)\""
   },
   "engines": {
     "node": "22.13.1",

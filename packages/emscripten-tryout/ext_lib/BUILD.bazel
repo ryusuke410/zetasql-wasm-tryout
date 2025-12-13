@@ -1,0 +1,14 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "ext_lib",
+    srcs = [
+        "add.cc",
+        "counter.cc",
+    ],
+    hdrs = [
+        "add.h",
+        "counter.h",
+    ],
+    visibility = ["//packages/emscripten-tryout/es-ext-lib:__pkg__"],
+)
