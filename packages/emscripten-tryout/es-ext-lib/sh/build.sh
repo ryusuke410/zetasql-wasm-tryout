@@ -11,9 +11,4 @@ bazelisk build //packages/emscripten-tryout/es-ext-lib:wasm_binding
 
 bazel_dist="$repo_root/bazel-bin/packages/emscripten-tryout/es-ext-lib/wasm_binding"
 mkdir -p "$package_dir/dist"
-cp -f "$bazel_dist"/binding.{js,wasm} "$package_dir/dist/"
-if [[ -f "$bazel_dist/binding.d.ts" ]]; then
-  cp -f "$bazel_dist"/binding.d.ts "$package_dir/dist/"
-else
-  cp -f "$package_dir/types/index.d.ts" "$package_dir/dist/binding.d.ts"
-fi
+cp -f "$bazel_dist"/binding.{js,wasm,d.ts} "$package_dir/dist/"
