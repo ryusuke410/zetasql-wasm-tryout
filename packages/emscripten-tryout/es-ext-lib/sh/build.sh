@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-cd ../..
+script_dir="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+package_dir="$(cd -- "$script_dir/.." && pwd)"
+repo_root="$(git -C "$package_dir" rev-parse --show-toplevel)"
 
-mkdir -p ./es-ext-lib/dist
+cd "$repo_root"
 
-emcc -lembind -o ./es-ext-lib/dist/index.js ./es-ext-lib/binding.cc ./ext_lib/add.cc ./ext_lib/counter.cc \
-  -s ENVIRONMENT=web,node \
-  -s ALLOW_MEMORY_GROWTH=1 \
-  -s EXPORT_ES6=1 \
-  -s MODULARIZE=1 \
-  -s NO_FILESYSTEM=1 \
-  -s ASSERTIONS=0 \
-  -flto \
-  --closure 1 \
-  -O3 \
-  --emit-tsd index.d.ts
+bazelisk build //packages/emscripten-tryout/es-ext-lib:wasm_binding
+
+dist_from_bazel="$repo_root/bazel-bin/packages/emscripten-tryout/es-ext-lib/dist"
+mkdir -p "$package_dir/dist"
+cp -f "$dist_from_bazel"/index.{js,wasm,d.ts} "$package_dir/dist/"

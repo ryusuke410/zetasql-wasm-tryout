@@ -15,27 +15,43 @@ genrule(
         "dist/index.js",
         "dist/index.wasm",
     ],
-    cmd = (
-        "set -euo pipefail; "
-        "tmpdir=$$(mktemp -d); "
-        "cp $(location :binding_cc) $(locations //packages/emscripten-tryout/ext_lib:cc_files) $(locations //packages/emscripten-tryout/ext_lib:headers) \"$$tmpdir\"/; "
-        "cd \"$$tmpdir\"; "
-        "emcc -lembind -o index.js binding.cc add.cc counter.cc "
-        "-I. "
-        "-s ENVIRONMENT=web,node "
-        "-s ALLOW_MEMORY_GROWTH=1 "
-        "-s EXPORT_ES6=1 "
-        "-s MODULARIZE=1 "
-        "-s NO_FILESYSTEM=1 "
-        "-s ASSERTIONS=0 "
-        "-flto "
-        "--closure 1 "
-        "-O3 "
-        "--emit-tsd index.d.ts; "
-        "mkdir -p $(@D); "
-        "mv index.js $(@D)/index.js; "
-        "mv index.wasm $(@D)/index.wasm; "
-        "mv index.d.ts $(@D)/index.d.ts"
-    ),
+    cmd = " && ".join([
+        "set -euo pipefail",
+        "workspace_dir=$$PWD",
+        "tmpdir=$$(mktemp -d)",
+        "mkdir -p \"$$tmpdir\"/es-ext-lib \"$$tmpdir\"/ext_lib",
+        "cp $(location :binding_cc) \"$$tmpdir\"/es-ext-lib/",
+        "cp $(locations //packages/emscripten-tryout/ext_lib:cc_files) \"$$tmpdir\"/ext_lib/",
+        "cp $(locations //packages/emscripten-tryout/ext_lib:headers) \"$$tmpdir\"/ext_lib/",
+        "cd \"$$tmpdir\"/es-ext-lib",
+        "out_dir=\"$$workspace_dir/$(@D)/dist\"",
+        "mkdir -p \"$${out_dir}\"",
+        " ".join([
+            "emcc",
+            "-lembind",
+            "binding.cc",
+            "../ext_lib/add.cc",
+            "../ext_lib/counter.cc",
+            "-I..",
+            "-I../ext_lib",
+            "-s ENVIRONMENT=web,node",
+            "-s ALLOW_MEMORY_GROWTH=1",
+            "-s EXPORT_ES6=1",
+            "-s MODULARIZE=1",
+            "-s NO_FILESYSTEM=1",
+            "-s ASSERTIONS=0",
+            "-flto",
+            "--closure",
+            "1",
+            "-O3",
+            "--emit-tsd",
+            "index.d.ts",
+            "-o",
+            "index.js",
+        ]),
+        "mv index.js \"$$out_dir\"/index.js",
+        "mv index.wasm \"$$out_dir\"/index.wasm",
+        "mv index.d.ts \"$$out_dir\"/index.d.ts",
+    ]),
     tools = ["@bazel_tools//tools/bash/runfiles"],
 )
