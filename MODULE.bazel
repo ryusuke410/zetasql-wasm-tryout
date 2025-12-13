@@ -2,6 +2,13 @@ module(name = "zetasql_wasm_tryout")
 
 emsdk_version = "4.0.21"
 
+local_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "local_repository")
+
+local_repository(
+    name = "com_google_zetasql",
+    path = "vendor/zetasql",
+)
+
 bazel_dep(name = "rules_cc", version = "0.1.1")
 bazel_dep(name = "emsdk", version = emsdk_version)
 archive_override(

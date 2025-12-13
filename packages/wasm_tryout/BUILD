@@ -1,6 +1,6 @@
 load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
 
-package(default_visibility = ["//zetasql/base:zetasql_implementation"])
+package(default_visibility = ["@com_google_zetasql//zetasql/base:zetasql_implementation"])
 
 DEFAULT_EMSCRIPTEN_LINKOPTS = [
     # LTO broken when using hermetic emsdk
@@ -26,12 +26,10 @@ WASM_LINKOPTS = [
 
 cc_binary(
     name = "index.js",
-    srcs = ["bindings/hello-world.cpp"],
+    srcs = ["bindings/zetasql.cc"],
     linkopts = DEFAULT_EMSCRIPTEN_LINKOPTS + WASM_LINKOPTS,
     deps = [
-        # TODO
-        "//hello-world/cpp:greet",
-        "//hello-world/cpp:localtime",
+        "@com_google_zetasql//zetasql/parser:parser",
     ],
 )
 
